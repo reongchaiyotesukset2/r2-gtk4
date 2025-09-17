@@ -20,8 +20,8 @@ mod imp {
 
 
     #[derive(Default, gtk::CompositeTemplate, glib::Properties)]
-    #[template(file = "../../ui/window.ui")]
-
+    //#[template(file = "../../ui/window.ui")]
+    #[template(resource = "/org/example/myapp/window.ui")]
     #[properties(wrapper_type = super::Window)]
 
   pub struct Window {
