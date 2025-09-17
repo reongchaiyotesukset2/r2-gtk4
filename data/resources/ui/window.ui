@@ -19,10 +19,11 @@
           <object class="AdwToolbarView"/>
         </child>
         <child>
-          <object class="AdwHeaderBar">
-            <child>
-              <object class="GtkButton"/>
-            </child>
+          <object class="AdwHeaderBar"/>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="label">Click</property>
           </object>
         </child>
       </object>
