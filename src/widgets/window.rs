@@ -1,4 +1,6 @@
 use std::cell::OnceCell;
+use gettextrs::gettext;
+use anyhow::Result;
 
 use adw::prelude::*;
 use gtk::{
@@ -20,15 +22,14 @@ mod imp {
 
 
     #[derive(Default, gtk::CompositeTemplate, glib::Properties)]
-    //#[template(file = "../../ui/window.ui")]
     #[template(resource = "/org/example/myapp/window.ui")]
     #[properties(wrapper_type = super::Window)]
 
     pub struct Window {
         #[property(get, set, construct_only)]
         pub model: OnceCell<ProvidersModel>,
-        //#[template_child]
-        //pub button_clicked : TemplateChild<gtk::Button>,
+        #[template_child]
+        pub button_clicked1 : TemplateChild<gtk::Button>,
     }
 
 
@@ -48,6 +49,13 @@ mod imp {
             klass.bind_template_instance_callbacks();
 
 
+            //klass.install_action("app.test1", None, |win, _, _| {
+            klass.install_action_async("app.test1", None, |win, _, _| async move {
+                if let Err(err) = win.open_qr_code().await {
+                    tracing::error!("Failed to load from QR Code file: {err}");
+                }
+
+            });
 
 
         }
@@ -125,5 +133,26 @@ impl Window {
 
 
     }
+      async fn open_qr_code(&self) -> Result<()> {
+          let window = self.root().and_downcast::<gtk::Window>().unwrap();
+
+         let images_filter = gtk::FileFilter::new();
+         images_filter.set_name(Some(&gettext("Image")));
+
+         images_filter.add_pixbuf_formats();
+
+         let model = gio::ListStore::new::<gtk::FileFilter>();
+         model.append(&images_filter);
+
+
+         let dialog = gtk::FileDialog::builder()
+         .modal(true)
+         .filters(&model)
+         .title(gettext("Select QR Code"))
+         .build();
+         let file = dialog.open_future(Some(&window)).await?;
+         let (data, _) = file.load_contents_future().await?;
+        Ok(())
+     }
 
 }
