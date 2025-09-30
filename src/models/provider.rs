@@ -51,6 +51,7 @@ impl Provider {
 
         let db = database::connection();
         let mut conn = db.get()?;
+        // diesel::delete(providers::table.filter(providers::columns::id.eq(self.id() as i32)))
         diesel::delete(providers::table.filter(providers::columns::id.eq(2)))
         .execute(&mut conn)?;
         Ok(())
