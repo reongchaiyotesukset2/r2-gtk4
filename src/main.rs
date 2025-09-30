@@ -2,6 +2,7 @@ mod widgets;
 mod application;
 mod models;
 mod config;
+mod schema;
 
 use crate::application::Application;
 

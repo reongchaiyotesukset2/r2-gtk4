@@ -16,3 +16,8 @@ once_cell = "1.19.0"
 anyhow = "1.0"
 tracing = {version = "0.1", default-features = false}
 gettext-rs = {version = "0.7", features = ["gettext-system"]}
+image = {version = "0.25", default-features = false, features = ["png"]}
+rqrr = { version = "0.10", default-features = false, features = ["img"] }
+
+diesel = {version = "2.0", features = ["sqlite", "r2d2"]}
+diesel_migrations = {version = "2.0", features = ["sqlite"]}

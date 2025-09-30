@@ -84,7 +84,7 @@ mod imp {
             }
             fn open(&self, _files: &[gio::File], _hint: &str) 
             {
-               //don't active 
+
                self.activate();
              }
             
@@ -104,9 +104,9 @@ impl Application {
     pub fn run() -> glib::ExitCode  {
      println!("run!!!!!!!!!!!!");
     
-     //tracing::info!("Authenticator ({})", config::APP_ID);
-     //tracing::info!("Version: {} ({})", config::VERSION, config::PROFILE);
-     //let test = self.obj();
+     tracing::info!("Authenticator ({})", config::APP_ID);
+     tracing::info!("Version: {} ({})", config::VERSION, config::PROFILE);
+
 
         let app = glib::Object::builder::<Application>()
             .property("application-id", config::APP_ID)
@@ -115,7 +115,7 @@ impl Application {
             app.imp().model.load();
         app.run()
         
-       // Self::test2();
+
       
     }
   pub fn test2(){
@@ -124,8 +124,7 @@ impl Application {
   }
   pub fn test1(&self){
     println!("test1!!!!!!");
-    //self.imp().defbool;
-    //let applicatiion_test = self.imp().activate();
+
   }
   pub fn active_window(&self) -> Window {
         self.imp()

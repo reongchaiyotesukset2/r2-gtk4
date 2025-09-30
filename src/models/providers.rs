@@ -19,7 +19,6 @@ mod imp {
     impl ObjectImpl for ProvidersModel {}
     impl ListModelImpl for ProvidersModel {
         fn item_type(&self) -> glib::Type {
-			println!("item_type!!!!!!!!!!!!!!!!!!!!! active");
             Provider::static_type()
         }
         fn n_items(&self) -> u32 {
@@ -41,7 +40,8 @@ glib::wrapper! {
 
 impl ProvidersModel {
     pub fn load(&self) {
-          println!("load  ProvidersModel!!!!!");
+         let providers = Provider::load();
+         println!("load  ProvidersModel on imp ProvidersModel witt file providers.rs");
     }
 }
 

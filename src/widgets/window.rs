@@ -5,7 +5,7 @@ use anyhow::Result;
 use adw::prelude::*;
 use gtk::{
     gio,
-    glib::{self, clone},
+    glib::{self},
     subclass::prelude::*,
 };
 
@@ -16,7 +16,6 @@ use crate::{
 
 mod imp {
     use adw::subclass::prelude::*;
-    use glib::subclass;
 
     use super::*;
 
@@ -49,13 +48,13 @@ mod imp {
             klass.bind_template_instance_callbacks();
 
 
-            //klass.install_action("app.test1", None, |win, _, _| {
             klass.install_action_async("app.test1", None, |win, _, _| async move {
                 if let Err(err) = win.open_qr_code().await {
                     tracing::error!("Failed to load from QR Code file: {err}");
                 }
 
             });
+
 
 
         }
@@ -133,6 +132,8 @@ impl Window {
 
 
     }
+
+
       async fn open_qr_code(&self) -> Result<()> {
           let window = self.root().and_downcast::<gtk::Window>().unwrap();
 
@@ -152,7 +153,21 @@ impl Window {
          .build();
          let file = dialog.open_future(Some(&window)).await?;
          let (data, _) = file.load_contents_future().await?;
+
+           let img = image::load_from_memory(&data)?;
+           let img_data = img.to_luma8();
+           let mut prepared_img = rqrr::PreparedImage::prepare(img_data);
+           let grids = prepared_img.detect_grids();
+           let mut decoded = Vec::new();
+
+           if let Some(grid) = grids.first() {
+              println!("{:?}",grid.decode_to(&mut decoded)?);
+           } else {
+               anyhow::bail!("Invalid QR code")
+           }
+
         Ok(())
      }
+
 
 }
