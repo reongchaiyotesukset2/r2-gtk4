@@ -6,7 +6,6 @@ use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 
 type Pool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
-// DB_PATH="/home/cargo/.local/share/r2-gtk4/database.db"
 static DB_PATH: LazyLock<PathBuf> =
 LazyLock::new(|| gtk::glib::user_data_dir().join("r2-gtk4"));
 static POOL: LazyLock<Pool> = LazyLock::new(|| init_pool().expect("Failed to create a pool"));
@@ -20,9 +19,6 @@ pub(crate) fn connection() -> Pool {
 fn init_pool() -> Result<Pool> {
     fs::create_dir_all(&*DB_PATH)?;
     let db_path = DB_PATH.join("database.db");
-
-
-
     if !db_path.exists() {
         File::create(&db_path)?;
     }
@@ -36,6 +32,5 @@ fn init_pool() -> Result<Pool> {
         .expect("Failed to run migrations");
     }
     tracing::info!("Database pool initialized.");
-     //println!("pool Connect::{:#?}",pool);
     Ok(pool)
 }

@@ -21,3 +21,8 @@ rqrr = { version = "0.10", default-features = false, features = ["img"] }
 
 diesel = {version = "2.0", features = ["sqlite", "r2d2"]}
 diesel_migrations = {version = "2.0", features = ["sqlite"]}
+percent-encoding = "2.3"
+serde = "1.0"
+ring = "0.17"
+zeroize = {version = "1", features = ["zeroize_derive"]}
+url = "2.5"

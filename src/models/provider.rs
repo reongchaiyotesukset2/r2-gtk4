@@ -1,7 +1,6 @@
 use gtk::{
-    gdk_pixbuf, gio,
-    glib::{self, clone},
-    prelude::*,
+
+    glib::{self},
     subclass::prelude::*,
 };
 use diesel::prelude::*;
@@ -9,31 +8,49 @@ use crate::{
     models::{database},
     schema::providers,
 };
+pub struct ProviderPatch {
+    pub name: String,
+    pub website: Option<String>,
+    pub help_url: Option<String>,
+    pub image_uri: Option<String>,
+    pub period: i32,
+    pub digits: i32,
+    pub default_counter: i32,
+    pub algorithm: String,
+    pub method: String,
+    pub is_backup_restore: bool,
+}
 
+#[derive(Insertable)]
+#[diesel(table_name = providers)]
+struct NewProvider {
+    pub name: String,
+    pub website: Option<String>,
+    pub help_url: Option<String>,
+    pub image_uri: Option<String>,
+    pub period: i32,
+    pub digits: i32,
+    pub default_counter: i32,
+    pub algorithm: String,
+    pub method: String,
+}
 mod imp {
-    use std::cell::{Cell, RefCell};
+
     use super::*;
 
-    #[derive(glib::Properties)]
-    #[properties(wrapper_type = super::Provider)]
+     #[derive(Default)]
     pub struct Provider {
-        #[property(get, set, construct_only)]
-        pub id: Cell<u32>,
+       
     }
 
     #[glib::object_subclass]
     impl ObjectSubclass for Provider {
         const NAME: &'static str = "Provider";
         type Type = super::Provider;
-        fn new() -> Self {
-            Self {
-                id: Cell::default(),
-            }
-        }
     }
 
     impl ObjectImpl for Provider {
-
+        
     }
 
     impl Provider {
@@ -49,11 +66,9 @@ impl Provider {
     pub fn load()-> Result<(), Box<dyn std::error::Error>> {
         println!("load on provider on provider.rs");
 
+        use crate::schema::providers::dsl::*;
         let db = database::connection();
-        let mut conn = db.get()?;
-        // diesel::delete(providers::table.filter(providers::columns::id.eq(self.id() as i32)))
-        diesel::delete(providers::table.filter(providers::columns::id.eq(2)))
-        .execute(&mut conn)?;
+        let mut _conn = db.get()?;
         Ok(())
     }
 }

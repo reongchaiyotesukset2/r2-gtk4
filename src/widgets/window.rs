@@ -11,9 +11,8 @@ use gtk::{
 
 use crate::{
     application::Application,config,
-    models::{ProvidersModel},
+    models::{ProvidersModel,OTPUri},
 };
-
 mod imp {
     use adw::subclass::prelude::*;
 
@@ -134,40 +133,44 @@ impl Window {
     }
 
 
-      async fn open_qr_code(&self) -> Result<()> {
-          let window = self.root().and_downcast::<gtk::Window>().unwrap();
+    async fn open_qr_code(&self) -> Result<()> {
+        let window = self.root().and_downcast::<gtk::Window>().unwrap();
 
-         let images_filter = gtk::FileFilter::new();
-         images_filter.set_name(Some(&gettext("Image")));
+        let images_filter = gtk::FileFilter::new();
+        images_filter.set_name(Some(&gettext("Image")));
 
-         images_filter.add_pixbuf_formats();
+        images_filter.add_pixbuf_formats();
 
-         let model = gio::ListStore::new::<gtk::FileFilter>();
-         model.append(&images_filter);
+        let model = gio::ListStore::new::<gtk::FileFilter>();
+        model.append(&images_filter);
 
 
-         let dialog = gtk::FileDialog::builder()
-         .modal(true)
-         .filters(&model)
-         .title(gettext("Select QR Code"))
-         .build();
-         let file = dialog.open_future(Some(&window)).await?;
-         let (data, _) = file.load_contents_future().await?;
+        let dialog = gtk::FileDialog::builder()
+        .modal(true)
+        .filters(&model)
+        .title(gettext("Select QR Code"))
+        .build();
+        let file = dialog.open_future(Some(&window)).await?;
+        let (data, _) = file.load_contents_future().await?;
+                    //อยู่ใน camera::scan
+        let img = image::load_from_memory(&data)?;
+        let img_data = img.to_luma8();
+        let mut prepared_img = rqrr::PreparedImage::prepare(img_data);
+        let grids = prepared_img.detect_grids();
+        let mut decoded = Vec::new();
 
-           let img = image::load_from_memory(&data)?;
-           let img_data = img.to_luma8();
-           let mut prepared_img = rqrr::PreparedImage::prepare(img_data);
-           let grids = prepared_img.detect_grids();
-           let mut decoded = Vec::new();
-
-           if let Some(grid) = grids.first() {
-              println!("{:?}",grid.decode_to(&mut decoded)?);
-           } else {
-               anyhow::bail!("Invalid QR code")
-           }
+        if let Some(grid) = grids.first() {
+            println!("{:?}",grid.decode_to(&mut decoded)?);
+        } else {
+            anyhow::bail!("Invalid QR code")
+        }
+        //ทดสอบการสร้าง  OTPUri
+        let code = String::from_utf8(decoded);
+        let uri = code?.parse::<OTPUri>()?;
+        println!("{:?}",uri);
 
         Ok(())
-     }
+    }
 
 
 }
