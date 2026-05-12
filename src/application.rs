@@ -15,7 +15,7 @@ use std::cell::{Cell,RefCell};
  
   
 mod imp {
-  
+  use adw::subclass::prelude::*;
   use super::*;
   #[derive(Default,glib::Properties)]
   #[properties(wrapper_type = super::Application)]
@@ -34,7 +34,7 @@ mod imp {
    
          const NAME: &'static str = "Application";
          type Type = super::Application;
-         type ParentType = gtk::Application;
+         type ParentType = adw::Application;
          type Interfaces = ();
    }
      #[glib::derived_properties]
@@ -52,23 +52,22 @@ mod imp {
 
 
             
-                    let quit_action = gio::ActionEntry::builder("quit")
+                  let quit_action = gio::ActionEntry::builder("quit")
                   .activate(|app: &Self::Type, _, _| {
                     app.quit()  
                   })
                   .build();
 
-
+                  let testClick_action = gio::ActionEntry::builder("testClick")
+                  .activate(|app: &Self::Type, _, _| {
+                          println!("Click");
+                   });
 
 
                     app.add_action_entries([
                         quit_action,
+                        testClick_action,
                     ]);
-
-                   let _quit_action = app.lookup_action("quit").unwrap();
-
-
-
 
 
             }
