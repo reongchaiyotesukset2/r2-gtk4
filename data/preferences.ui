@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 1.0.2 -->
+<interface>
+  <!-- interface-name preferences.ui -->
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="preferences" parent="AdwPreferencesDialog">
+    <property name="content-height">600</property>
+    <property name="content-width">400</property>
+  </template>
+</interface>
