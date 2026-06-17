@@ -36,7 +36,7 @@ mod imp {
 
     const NAME: &'static str = "Application";
     type Type = super::Application;
-    type ParentType = gtk::Application;
+    type ParentType = adw::Application;
     type Interfaces = ();
   }
   #[glib::derived_properties]
@@ -59,7 +59,6 @@ mod imp {
         app.quit()
       })
       .build();
-
       let preferences_action = gio::ActionEntry::builder("preferences")
       .activate(|app: &Self::Type, _, _| {
         let window = app.active_window();
@@ -98,7 +97,6 @@ mod imp {
         quit_action,
         preferences_action,
         about_action,
-
       ]);
 
 
@@ -122,6 +120,7 @@ mod imp {
 
   }
   impl GtkApplicationImpl for Application {}
+  impl AdwApplicationImpl for Application {}
 }
 
 glib::wrapper! {

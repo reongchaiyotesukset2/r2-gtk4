@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- Created with Cambalache 1.0 -->
+<!-- Created with Cambalache 1.0.2 -->
 <interface>
   <!-- interface-name window.ui -->
   <requires lib="gtk" version="4.0"/>
@@ -22,8 +22,14 @@
           <object class="AdwHeaderBar">
             <child>
               <object class="GtkButton">
-                <property name="action-name">app.test</property>
-                <property name="label">test</property>
+                <property name="action-name">app.quit</property>
+                <property name="label">quit</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="action-name">app.preferences</property>
+                <property name="label">preferences</property>
               </object>
             </child>
           </object>
